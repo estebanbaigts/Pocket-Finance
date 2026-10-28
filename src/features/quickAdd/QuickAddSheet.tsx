@@ -39,7 +39,7 @@ export function QuickAddSheet({ open, onClose, initialKind = 'operation' }: { op
 
   return (
     <Sheet open={open} onClose={onClose} title="Ajouter" size="lg">
-      <div role="tablist" aria-label="Que veux-tu ajouter ?" className="-mx-1 mb-5 flex gap-1 overflow-x-auto px-1">
+      <div role="tablist" aria-label="Que veux-tu ajouter ?" className="-mx-1 mb-5 flex gap-1 no-scrollbar overflow-x-auto px-1">
         {KINDS.map((k) => (
           <button key={k.value} role="tab" type="button" aria-selected={kind === k.value} onClick={() => setKind(k.value)}
             className={cn('h-8 shrink-0 rounded-md px-3 text-[13px] font-medium transition-colors', kind === k.value ? 'bg-ink text-bg' : 'bg-surface-2 text-ink-2 hover:text-ink')}>

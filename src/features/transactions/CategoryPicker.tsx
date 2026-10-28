@@ -8,7 +8,7 @@ export function CategoryPicker({ categories, kind, value, onChange }: { categori
   return (
     <fieldset>
       <legend className="mb-1.5 text-[13px] font-medium text-ink-2">Catégorie</legend>
-      <div className="-mx-1 flex gap-1.5 overflow-x-auto px-1 pb-1 min-[600px]:flex-wrap">
+      <div className="-mx-1 flex gap-1.5 no-scrollbar overflow-x-auto px-1 pb-1 min-[600px]:flex-wrap">
         {options.map((category) => {
           const active = category.id === value
           return (

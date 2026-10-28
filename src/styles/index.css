@@ -96,6 +96,13 @@
   .safe-top {
     padding-top: env(safe-area-inset-top);
   }
+  /* Rangées défilantes (pastilles) : défilement tactile conservé, barre masquée. */
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
   .hairline {
     border-color: var(--border);
   }

@@ -54,7 +54,7 @@ export default function ForecastPage() {
           </table>
         )}
       </Panel>
-      <div className="grid gap-4 min-[900px]:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 min-[900px]:grid-cols-2">
         <Panel title="Hypothèses" eyebrow="Modifiables">{settings && <AssumptionsEditor settings={settings} forecast={f.forecast} />}</Panel>
         <Panel title="Ce qui n’est pas encore projeté" eyebrow="Données incomplètes">
           <ul className="flex flex-col gap-2 text-[13px] text-ink-2">

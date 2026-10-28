@@ -17,13 +17,13 @@ export default function OverviewPage() {
   return (
     <>
       <PageHeader eyebrow={date.charAt(0).toUpperCase() + date.slice(1)} title="Vue d’ensemble" />
-      <div className="grid gap-4 min-[1100px]:grid-cols-[1.35fr_1fr]">
-        <div className="flex flex-col gap-4">
+      <div className="grid grid-cols-1 gap-4 min-[1100px]:grid-cols-[1.35fr_1fr]">
+        <div className="flex min-w-0 flex-col gap-4">
           <BalanceHero f={f} />
           <CapacityPanel f={f} />
           <MonthPanel f={f} />
         </div>
-        <div className="flex flex-col gap-4">
+        <div className="flex min-w-0 flex-col gap-4">
           <AlertsPanel insights={insights} duplicates={f.duplicates} />
           <UpcomingPanel today={f.today} onSeeAll={() => navigate('bills')} />
         </div>

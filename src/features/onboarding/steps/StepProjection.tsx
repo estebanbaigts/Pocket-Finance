@@ -12,9 +12,9 @@ export function StepProjection() {
     <div className="flex flex-col gap-4">
       <div className="rounded-lg border border-line bg-surface p-5">
         <p className="eyebrow">{noBase ? 'Variation prévue d’ici le' : 'Fin de mois ·'} {formatDateFr(f.forecast.endDate)}</p>
-        <div className="mt-3 grid grid-cols-3 gap-3">
+        <div className="mt-3 grid grid-cols-1 gap-2 min-[560px]:grid-cols-3 min-[560px]:gap-3">
           {(['prudent', 'realistic', 'favorable'] as const).map((s) => (
-            <div key={s}><p className="text-[12px] text-ink-3">{{ prudent: 'Prudent', realistic: 'Réaliste', favorable: 'Favorable' }[s]}</p><Amount cents={noBase ? scenarios[s].endCents - scenarios[s].startCents : scenarios[s].endCents} signed={noBase} tone="auto" animated className="text-[22px] font-semibold" /></div>
+            <div key={s} className="flex items-baseline justify-between gap-3 min-[560px]:block"><p className="text-[12px] text-ink-3">{{ prudent: 'Prudent', realistic: 'Réaliste', favorable: 'Favorable' }[s]}</p><Amount cents={noBase ? scenarios[s].endCents - scenarios[s].startCents : scenarios[s].endCents} signed={noBase} tone="auto" animated className="text-[22px] font-semibold" /></div>
           ))}
         </div>
       </div>

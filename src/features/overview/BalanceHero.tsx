@@ -23,13 +23,13 @@ export function BalanceHero({ f }: { f: Financials }) {
           {balance.unknownAccounts.map((a) => <Badge key={a.id} tone="warning">Solde inconnu : {a.name}</Badge>)}
         </div>
       )}
-      <dl className="mt-6 grid grid-cols-3 gap-3 border-t border-line pt-5">
+      <dl className="mt-6 grid grid-cols-1 gap-2 border-t border-line pt-5 min-[560px]:grid-cols-3 min-[560px]:gap-3">
         {(['prudent', 'realistic', 'favorable'] as const).map((name) => {
           const p = forecast.scenarios[name]
           // Sans aucun solde connu, on n'affiche pas un « solde de fin de mois » partant de zéro : seulement la variation.
           const cents = noAccount ? p.endCents - p.startCents : p.endCents
           return (
-            <div key={name}>
+            <div key={name} className="flex items-baseline justify-between gap-3 min-[560px]:block">
               <dt className="text-[12px] text-ink-3">{noAccount ? 'Variation prévue' : 'Fin de mois'} · {{ prudent: 'prudent', realistic: 'réaliste', favorable: 'favorable' }[name]}</dt>
               <dd><Amount cents={cents} signed={noAccount} tone="auto" animated className={name === 'realistic' ? 'text-[20px] font-semibold' : 'text-[16px] font-medium text-ink-2'} /></dd>
             </div>
