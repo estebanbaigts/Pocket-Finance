@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'motion/react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Button, useToast } from '@/components/ui'
 import { transition } from '@/components/motion'
 import { APP_NAME } from '@/app/config'
@@ -39,6 +39,7 @@ export function OnboardingFlow() {
   const [step, setStep] = useState(() => (accounts.length > 0 || rules.length > 0 ? 5 : 0))
   const [saving, setSaving] = useState(false)
   const [state, setState] = useState<OnboardingState>(() => initialState(today))
+  useEffect(() => window.scrollTo({ top: 0 }), [step])
   const update = (patch: Partial<OnboardingState>) => setState((s) => ({ ...s, ...patch }))
 
   const next = async () => {
@@ -76,7 +77,7 @@ export function OnboardingFlow() {
           {body}
         </motion.div>
       </AnimatePresence>
-      <div className="sticky bottom-0 mt-8 flex items-center gap-2 border-t border-line bg-bg py-4">
+      <div className="sticky bottom-0 mt-8 flex items-center gap-2 border-t border-line bg-bg pt-4 pb-[max(env(safe-area-inset-bottom),16px)]">
         {step > 0 && step < 5 && <Button variant="ghost" onClick={() => setStep((s) => s - 1)}>Retour</Button>}
         {step > 0 && step < 4 && <Button variant="ghost" onClick={() => setStep((s) => s + 1)} className="ml-auto">Passer cette étape</Button>}
         <Button variant="primary" size="lg" onClick={next} disabled={saving} className={step === 0 || step >= 4 ? 'ml-auto' : ''}>
