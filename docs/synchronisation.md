@@ -2,9 +2,29 @@
 
 Sans configuration, l'application est **entièrement locale**. Rien n'est envoyé nulle part.
 
-> État : le moteur de synchronisation est testé contre un serveur en mémoire qui reproduit les règles SQL, et les
-> migrations/RLS sont testées sur PostgreSQL 15. **La connexion à un vrai projet Supabase n'a pas été testée** (aucun
-> projet n'était disponible pendant le développement). Fais le test décrit en fin de page avant de t'y fier.
+## Instance en service (28/10/2026)
+
+| Élément | Valeur |
+| --- | --- |
+| Application | <https://pocket-finance-nu.vercel.app> (Vercel, projet `pocket-finance`) |
+| Supabase | projet `pocket-finance`, ref `ozupdeysizxritjdiudt`, région Paris (`eu-west-3`), offre gratuite |
+| Migrations | appliquées (`supabase db push`) |
+| Vérifié en ligne | accès anonyme refusé en lecture, écriture et sur `delete_my_data` (HTTP 401) ; aucune clé secrète dans le bundle |
+| Authentification | lien magique ; URL du site et redirections : l'app Vercel, `localhost:5173`, `localhost:5174` ; confirmation e-mail et MFA TOTP actifs |
+| À tester par toi | la connexion par lien magique puis la synchronisation entre deux appareils (procédure en fin de page) |
+
+Le mot de passe de la base est conservé hors du dépôt (`.env.supabase.local`, ignoré par git). Il ne sert qu'à la CLI
+(`supabase db push`) et ne doit jamais aller dans l'application.
+
+Une fois ton compte créé, tu peux désactiver les nouvelles inscriptions (`enable_signup = false` dans
+`supabase/config.toml`, section `[auth]`, puis `supabase config push`) : personne d'autre ne pourra créer de compte sur
+ton projet. Même sans cela, RLS isole les données de chaque compte.
+
+Le service d'e-mail intégré de Supabase est limité (quelques e-mails par heure) : suffisant pour un usage personnel ;
+au-delà, configurer un SMTP.
+
+> Moteur testé contre un serveur en mémoire reproduisant les règles SQL ; SQL/RLS testés sur PostgreSQL 15 et vérifiés
+> en ligne pour l'accès anonyme. La connexion et la synchronisation d'un utilisateur réel restent à tester.
 
 ## Mise en place (≈ 15 minutes, gratuit)
 
@@ -13,7 +33,8 @@ Sans configuration, l'application est **entièrement locale**. Rien n'est envoy�
    - Tableau de bord → *SQL Editor* → exécute, dans l'ordre, le contenu de
      `db/migrations/20261028000001_schema.sql` puis `db/migrations/20261028000002_rls.sql` ;
    - ou avec la CLI : `supabase link --project-ref <ref>` puis `supabase db push` (le dossier `supabase/migrations`
-     pointe vers `db/migrations`).
+     pointe vers `db/migrations`). Les URL d'authentification se règlent dans `supabase/config.toml` puis
+     `supabase config push` (relis le diff affiché : il pousse toute la section `[auth]`).
 3. *Authentication → URL Configuration* : mets l'URL de ton application dans **Site URL** et ajoute-la aux
    **Redirect URLs** (ex. `https://pocket.example.pages.dev` et `http://localhost:5173` pour le développement).
 4. *Project Settings → API* : copie **Project URL** et la clé **anon / publishable**.

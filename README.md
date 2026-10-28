@@ -12,6 +12,9 @@ en fin de mois, comment rembourser mes dettes et épargner sans me mettre en dif
 
 Le nom affiché est configurable (`VITE_APP_NAME` ou Paramètres).
 
+**En ligne** : <https://pocket-finance-nu.vercel.app> — à ouvrir dans Safari sur iPhone puis Partager → « Sur l'écran
+d'accueil ». Synchronisation via Supabase (Paris) : voir [docs/synchronisation.md](docs/synchronisation.md).
+
 ---
 
 ## Démarrer depuis un clone vierge
@@ -43,8 +46,8 @@ crédits, budgets, première projection). Chaque étape peut être passée.
 
 ### Installer sur iPhone / Mac
 
-L'application doit être servie en HTTPS (un hébergement statique gratuit suffit, voir
-[docs/deploiement.md](docs/deploiement.md)).
+L'application doit être servie en HTTPS. Elle est déployée sur Vercel (`vercel.json` : en-têtes de sécurité, cache).
+Redéployer : `npx vercel@latest deploy --prod`. Voir [docs/deploiement.md](docs/deploiement.md).
 
 - **iPhone** : Safari → Partager → « Sur l'écran d'accueil ».
 - **Mac** : Safari → Fichier → « Ajouter au Dock » (ou Chrome → Installer l'application).
