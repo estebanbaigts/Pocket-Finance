@@ -1,18 +1,15 @@
-import { useState } from 'react'
-import { Button, Field, Panel, TextInput, Toggle, useToast } from '@/components/ui'
+import { Button, Panel, Toggle } from '@/components/ui'
 import { updateEntity } from '@/services/storage'
-import { sendMagicLink, signOut } from '@/services/sync'
+import { signOut } from '@/services/sync'
 import { useLedger } from '../data/LedgerProvider'
 import { SyncIndicator } from '../sync/SyncIndicator'
 import { useSync } from '../sync/SyncProvider'
 import { ConflictsList } from './ConflictsList'
+import { LoginForm } from './LoginForm'
 
 export function SyncSection() {
   const { settings } = useLedger()
   const sync = useSync()
-  const toast = useToast()
-  const [email, setEmail] = useState('')
-  const [sent, setSent] = useState(false)
   if (!settings) return null
 
   if (!sync.configured) {
@@ -26,14 +23,7 @@ export function SyncSection() {
     <Panel title="Synchronisation">
       <div className="flex flex-col gap-4">
         <Toggle checked={settings.syncMode === 'cloud'} onChange={(v) => void updateEntity('settings', settings.id, { syncMode: v ? 'cloud' : 'local' })} label="Synchroniser cet appareil" description="Les données restent aussi disponibles hors ligne ; les modifications partent dès que le réseau revient." />
-        {settings.syncMode === 'cloud' && !sync.session && (
-          sent ? <p className="text-[13px] text-ink-2">Lien envoyé. Ouvre-le sur cet appareil pour te connecter.</p> : (
-            <div className="flex flex-wrap items-end gap-2">
-              <Field label="Adresse e-mail" className="min-w-[240px] flex-1">{(p) => <TextInput type="email" autoComplete="email" {...p} value={email} onChange={(e) => setEmail(e.target.value)} />}</Field>
-              <Button variant="primary" disabled={!email.includes('@')} onClick={async () => { const r = await sendMagicLink(email); if (r.ok) setSent(true); else toast({ title: r.error ?? 'Erreur', tone: 'error' }) }}>Recevoir un lien de connexion</Button>
-            </div>
-          )
-        )}
+        {settings.syncMode === 'cloud' && !sync.session && <LoginForm />}
         {sync.session && (
           <div className="flex flex-wrap items-center gap-2">
             <p className="flex-1 text-[13px] text-ink-2">Connecté : {sync.session.user.email}</p>

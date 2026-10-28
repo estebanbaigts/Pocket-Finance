@@ -1,6 +1,8 @@
 import type { Session } from '@supabase/supabase-js'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from 'react'
+import { useToast } from '@/components/ui'
+import { listenForAuthRedirect } from '@/lib/native/authRedirect'
 import { useOnline } from '@/lib/useOnline'
 import { db } from '@/services/storage'
 import { SupabaseRemote, currentSession, getSupabase, isCloudConfigured, onSessionChange, readSyncStatus, retryDelayMs, syncOnce, type SyncStatus } from '@/services/sync'
@@ -23,6 +25,7 @@ const SyncContext = createContext<SyncContextValue | null>(null)
  */
 export function SyncProvider({ children }: { children: ReactNode }) {
   const { settings } = useLedger()
+  const toast = useToast()
   const online = useOnline()
   const configured = isCloudConfigured()
   const [session, setSession] = useState<Session | null>(null)
@@ -35,8 +38,13 @@ export function SyncProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (!configured) return
     void currentSession().then(setSession)
-    return onSessionChange(setSession)
-  }, [configured])
+    const stopRedirects = listenForAuthRedirect(() => toast({ title: 'Lien de connexion invalide ou expiré.', tone: 'error' }))
+    const stopSession = onSessionChange(setSession)
+    return () => {
+      stopRedirects()
+      stopSession()
+    }
+  }, [configured, toast])
 
   const syncNow = useCallback(async () => {
     const client = await getSupabase()

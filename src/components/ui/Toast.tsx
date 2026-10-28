@@ -3,6 +3,7 @@ import { AlertTriangle, Check, Info } from 'lucide-react'
 import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from 'react'
 import { transition } from '../motion'
 import { cn } from '@/lib/cn'
+import { hapticFeedback } from '@/lib/native/haptics'
 
 interface ToastInput {
   title: string
@@ -23,6 +24,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
   const dismiss = useCallback((id: number) => setItems((list) => list.filter((t) => t.id !== id)), [])
   const push = useCallback((toast: ToastInput) => {
     const id = Date.now() + Math.random()
+    hapticFeedback(toast.tone === 'error' ? 'error' : 'success')
     setItems((list) => [...list.slice(-2), { ...toast, id }])
     if (toast.tone !== 'error') window.setTimeout(() => dismiss(id), toast.durationMs ?? (toast.action ? 6000 : 3200))
   }, [dismiss])

@@ -1,12 +1,15 @@
 import type { Session } from '@supabase/supabase-js'
 import { getSupabase } from './supabaseClient'
 
-/** Connexion par lien magique envoyé par e-mail : aucun mot de passe stocké ni saisi dans l'application. */
-export async function sendMagicLink(email: string): Promise<{ ok: boolean; error: string | null }> {
+/**
+ * Envoie un lien de connexion par e-mail. Aucun mot de passe. `redirectTo` doit figurer dans la
+ * liste des redirections autorisées du projet Supabase (supabase/config.toml).
+ */
+export async function sendLoginEmail(email: string, redirectTo?: string): Promise<{ ok: boolean; error: string | null }> {
   const client = await getSupabase()
   if (!client) return { ok: false, error: 'Synchronisation non configurée' }
-  const { error } = await client.auth.signInWithOtp({ email, options: { emailRedirectTo: window.location.origin } })
-  return { ok: !error, error: error ? 'Envoi impossible. Vérifie l’adresse et réessaie.' : null }
+  const { error } = await client.auth.signInWithOtp({ email, options: redirectTo ? { emailRedirectTo: redirectTo } : undefined })
+  return { ok: !error, error: error ? 'Envoi impossible. Vérifie l’adresse ou réessaie dans une minute.' : null }
 }
 
 export async function currentSession(): Promise<Session | null> {

@@ -1,12 +1,13 @@
 import { todayIso } from '@/domain/dates'
 import { ensureDefaults, ensureOccurrences } from '@/services/storage'
+import { isNativeApp, requestPersistentStorage } from '@/lib/native/platform'
 import { APP_NAME } from './config'
 
 let started: Promise<void> | null = null
 
 /** Au démarrage (une seule fois) : paramètres et catégories par défaut, puis échéances manquantes. */
 export function bootstrap(): Promise<void> {
-  started ??= ensureDefaults(APP_NAME).then(() => ensureOccurrences(todayIso())).then(() => undefined)
+  started ??= ensureDefaults(APP_NAME).then(() => ensureOccurrences(todayIso())).then(() => void requestPersistentStorage())
   return started
 }
 
@@ -21,7 +22,8 @@ export function watchForeground(): () => void {
 
 /** Enregistre le service worker en production uniquement (le mode développement reste sans cache). */
 export function registerServiceWorker(): void {
-  if (!import.meta.env.PROD || !('serviceWorker' in navigator)) return
+  // Dans l'app iOS, les fichiers sont déjà embarqués : pas de service worker.
+  if (!import.meta.env.PROD || isNativeApp() || !('serviceWorker' in navigator)) return
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('/sw.js').catch(() => console.warn('Service worker non enregistré : mode hors ligne indisponible'))
   })
