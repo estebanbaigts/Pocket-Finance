@@ -62,6 +62,7 @@ export default function TransactionsPage() {
         <TransactionForm initial={blankTransaction('expense', today)} onDone={() => { toast({ title: 'Opération enregistrée' }); setAdding(false) }} />
       </Sheet>
       <EditTransactionSheet txn={actions.editing} onClose={actions.close} />
+      {actions.settleDialog}
     </>
   )
 }

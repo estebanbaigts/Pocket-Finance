@@ -6,6 +6,8 @@ import { softDelete } from '@/services/storage'
 import { formatCents } from '@/domain/money'
 import { blankRule } from '../bills/ruleSchema'
 import { RuleForm } from '../bills/RuleForm'
+import { useLedger } from '../data/LedgerProvider'
+import { activeAccounts } from '../data/lookups'
 import { useToday } from '../data/useToday'
 import { blankDebt } from '../debts/debtSchema'
 import { DebtForm } from '../debts/DebtForm'
@@ -29,8 +31,11 @@ export function QuickAddSheet({ open, onClose, initialKind = 'operation' }: { op
   const toast = useToast()
   const [kind, setKind] = useState<QuickAddKind>(initialKind)
   const done = (title: string) => { toast({ title }); onClose() }
-  const expense = { ...blankTransaction('expense', today), accountId: readPreference('account:expense') }
-  const bill = { ...blankTransaction('expense', today), status: 'planned' as const, isBill: true }
+  const { accounts } = useLedger()
+  // Compte par défaut : le dernier utilisé sur cet appareil, sinon le premier compte courant.
+  const defaultAccount = readPreference('account:expense') ?? activeAccounts(accounts).find((a) => a.kind === 'checking')?.id ?? null
+  const expense = { ...blankTransaction('expense', today), accountId: accounts.some((a) => a.id === defaultAccount) ? defaultAccount : null }
+  const bill = { ...blankTransaction('expense', today), accountId: expense.accountId, status: 'planned' as const, isBill: true }
 
   return (
     <Sheet open={open} onClose={onClose} title="Ajouter" size="lg">
@@ -45,7 +50,7 @@ export function QuickAddSheet({ open, onClose, initialKind = 'operation' }: { op
       {kind === 'operation' && (
         <TransactionForm initial={expense} onDone={(t) => {
           toast({
-            title: `${t.type === 'income' ? 'Revenu' : t.type === 'transfer' ? 'Transfert' : 'Dépense'} de ${formatCents(t.amountCents)} enregistré`,
+            title: t.type === 'expense' ? `Dépense de ${formatCents(t.amountCents)} enregistrée` : `${t.type === 'income' ? 'Revenu' : 'Transfert'} de ${formatCents(t.amountCents)} enregistré`,
             action: { label: 'Annuler', onClick: () => void softDelete('transactions', t.id) },
           })
           onClose()

@@ -27,6 +27,7 @@ export function UpcomingPanel({ today, onSeeAll }: { today: string; onSeeAll: ()
         </div>
       )}
       <EditTransactionSheet txn={actions.editing} onClose={actions.close} />
+      {actions.settleDialog}
     </Panel>
   )
 }

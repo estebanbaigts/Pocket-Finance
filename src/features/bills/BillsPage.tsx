@@ -55,6 +55,7 @@ export default function BillsPage() {
         <RuleForm initial={blankRule(direction === 'in' ? 'income' : 'bill')} onDone={() => { toast({ title: 'Échéance créée' }); setAdding(false) }} />
       </Sheet>
       <EditTransactionSheet txn={actions.editing} onClose={actions.close} />
+      {actions.settleDialog}
     </>
   )
 }

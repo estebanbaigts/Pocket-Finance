@@ -4,7 +4,7 @@ import { toneVar } from '../data/lookups'
 
 /** Choix de catégorie en un geste : pastilles sur une ligne défilante (iPhone) ou en grille (Mac). */
 export function CategoryPicker({ categories, kind, value, onChange }: { categories: Category[]; kind: CategoryKind; value: string; onChange: (id: string) => void }) {
-  const options = categories.filter((c) => c.kind === kind)
+  const options = categories.filter((c) => c.kind === kind).sort((a, b) => a.name.localeCompare(b.name, 'fr'))
   return (
     <fieldset>
       <legend className="mb-1.5 text-[13px] font-medium text-ink-2">Catégorie</legend>
