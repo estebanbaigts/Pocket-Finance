@@ -1,0 +1,125 @@
+/* Design tokens Pocket. Les couleurs sont fonctionnelles : vert = positif/épargne, orange = vigilance,
+   rouge = action requise. Le sens n'est jamais porté par la couleur seule (texte ou icône associés). */
+:root {
+  color-scheme: light;
+  --bg: #f6f3ec;
+  --surface: #fffdf8;
+  --surface-2: #efebe1;
+  --surface-3: #e6e1d5;
+  --border: rgb(31 29 24 / 0.1);
+  --border-strong: rgb(31 29 24 / 0.18);
+  --ink: #1f1e1b;
+  --ink-2: #57534b;
+  --ink-3: #6b665c;
+  --positive: #1f5c43;
+  --positive-soft: #e2ede4;
+  --warning: #9a520e;
+  --warning-soft: #f6e7d3;
+  --warning-fill: #e8a25b;
+  --danger: #b42318;
+  --danger-soft: #f8e1de;
+  --info: #2f5a8a;
+  --info-soft: #e1e9f2;
+  --focus: #2f5a8a;
+  --overlay: rgb(20 19 16 / 0.32);
+
+  --tone-green: #2f7a57;
+  --tone-amber: #c9812f;
+  --tone-red: #c2453a;
+  --tone-blue: #3a6ea5;
+  --tone-violet: #7258a8;
+  --tone-slate: #6b7280;
+  --tone-teal: #2a8580;
+  --tone-rose: #b8577a;
+
+  --font-sans: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter', 'Segoe UI', system-ui, sans-serif;
+  --font-display: ui-serif, 'New York', 'Iowan Old Style', 'Charter', Georgia, serif;
+  --font-numeric: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', system-ui, sans-serif;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-pill: 999px;
+
+  --shadow-sm: 0 1px 2px rgb(31 29 24 / 0.06);
+  --shadow-md: 0 8px 24px -12px rgb(31 29 24 / 0.18), 0 1px 2px rgb(31 29 24 / 0.05);
+  --shadow-lg: 0 24px 60px -24px rgb(31 29 24 / 0.35);
+
+  --duration-fast: 140ms;
+  --duration-base: 200ms;
+  --duration-slow: 280ms;
+  --duration-context: 420ms;
+  --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+
+  --layer-sticky: 10;
+  --layer-nav: 20;
+  --layer-overlay: 40;
+  --layer-sheet: 50;
+  --layer-toast: 60;
+
+  --sidebar-width: 232px;
+  --tabbar-height: 64px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    color-scheme: dark;
+    --bg: #141512;
+    --surface: #1b1c19;
+    --surface-2: #232420;
+    --surface-3: #2d2e29;
+    --border: rgb(255 255 255 / 0.08);
+    --border-strong: rgb(255 255 255 / 0.16);
+    --ink: #f2efe7;
+    --ink-2: #bdb8ad;
+    --ink-3: #a19c91;
+    --positive: #78cfa0;
+    --positive-soft: #1d3328;
+    --warning: #f1b46f;
+    --warning-soft: #3a2b1a;
+    --warning-fill: #e8a25b;
+    --danger: #f4948a;
+    --danger-soft: #3d1f1c;
+    --info: #8fb6e3;
+    --info-soft: #1d2a3a;
+    --focus: #8fb6e3;
+    --overlay: rgb(0 0 0 / 0.55);
+    --shadow-md: 0 8px 24px -12px rgb(0 0 0 / 0.6);
+    --shadow-lg: 0 24px 60px -24px rgb(0 0 0 / 0.8);
+  }
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --bg: #141512;
+  --surface: #1b1c19;
+  --surface-2: #232420;
+  --surface-3: #2d2e29;
+  --border: rgb(255 255 255 / 0.08);
+  --border-strong: rgb(255 255 255 / 0.16);
+  --ink: #f2efe7;
+  --ink-2: #bdb8ad;
+  --ink-3: #a19c91;
+  --positive: #78cfa0;
+  --positive-soft: #1d3328;
+  --warning: #f1b46f;
+  --warning-soft: #3a2b1a;
+  --danger: #f4948a;
+  --danger-soft: #3d1f1c;
+  --info: #8fb6e3;
+  --info-soft: #1d2a3a;
+  --focus: #8fb6e3;
+  --overlay: rgb(0 0 0 / 0.55);
+  --shadow-md: 0 8px 24px -12px rgb(0 0 0 / 0.6);
+  --shadow-lg: 0 24px 60px -24px rgb(0 0 0 / 0.8);
+}
