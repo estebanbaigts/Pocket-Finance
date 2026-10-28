@@ -5,7 +5,7 @@ import type { Cents } from '../model'
  * Accepte « 53,48 », « 53.48 », « 1 234,5 », « 900 € ». Retourne `null` si la saisie est invalide.
  */
 export function parseAmountInput(input: string): Cents | null {
-  const cleaned = input.replace(/[\s  €]/g, '').replace(',', '.')
+  const cleaned = input.replace(/[\s\u00a0\u202f€]/g, '').replace(',', '.')
   if (!/^\d+(\.\d{0,2})?$/.test(cleaned)) return null
   const [units = '0', decimals = ''] = cleaned.split('.')
   const cents = Number(units) * 100 + Number(decimals.padEnd(2, '0'))
