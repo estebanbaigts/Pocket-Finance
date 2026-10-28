@@ -17,7 +17,10 @@ export interface SyncedEntity {
   updatedAt: string
   /** Suppression logique : nécessaire pour propager une suppression entre appareils. */
   deletedAt: string | null
-  /** Incrémentée à chaque modification locale ; sert à détecter les conflits (verrou optimiste). */
+  /**
+   * Dernière version connue du serveur (0 = jamais synchronisé). Verrou optimiste : un envoi n'est
+   * accepté que si la version distante est encore celle-ci, sinon un conflit est levé.
+   */
   version: number
 }
 
