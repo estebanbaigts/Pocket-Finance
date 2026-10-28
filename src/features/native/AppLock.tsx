@@ -2,7 +2,7 @@ import { App } from '@capacitor/app'
 import { Lock } from 'lucide-react'
 import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
 import { Button } from '@/components/ui'
-import { verifyOwner } from '@/lib/native/biometric'
+import { biometricAvailable, verifyOwner } from '@/lib/native/biometric'
 import { isNativeApp } from '@/lib/native/platform'
 import { useNativePref } from './nativePrefs'
 
@@ -10,13 +10,20 @@ const RELOCK_AFTER_MS = 30_000
 
 /** Verrou Face ID : à l'ouverture et au retour après 30 s en arrière-plan, si activé sur cet iPhone. */
 export function AppLock({ children }: { children: ReactNode }) {
-  const enabled = useNativePref('lock') && isNativeApp()
-  const [locked, setLocked] = useState(enabled)
+  const wanted = useNativePref('lock') && isNativeApp()
+  // Sécurité : sans Face ID ni code configuré, on ne verrouille jamais (sinon l'app deviendrait inaccessible).
+  const [available, setAvailable] = useState<boolean | null>(wanted ? null : false)
+  const enabled = wanted && available === true
+  const [locked, setLocked] = useState(wanted)
   const hiddenAt = useRef<number | null>(null)
 
   const unlock = useCallback(async () => {
     if (await verifyOwner()) setLocked(false)
   }, [])
+
+  useEffect(() => {
+    if (wanted) void biometricAvailable().then(setAvailable)
+  }, [wanted])
 
   useEffect(() => {
     if (!enabled) return
@@ -31,6 +38,7 @@ export function AppLock({ children }: { children: ReactNode }) {
     if (enabled && locked) void unlock()
   }, [enabled, locked, unlock])
 
+  if (wanted && available === null) return null
   if (!enabled || !locked) return <>{children}</>
   return (
     <div className="flex min-h-dvh flex-col items-center justify-center gap-4 bg-bg px-6 text-center">

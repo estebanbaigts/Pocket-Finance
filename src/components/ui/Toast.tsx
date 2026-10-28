@@ -1,7 +1,7 @@
 import { AnimatePresence, motion } from 'motion/react'
-import { AlertTriangle, Check, Info } from 'lucide-react'
+import { AlertTriangle, Info } from 'lucide-react'
 import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from 'react'
-import { transition } from '../motion'
+import { SuccessCheck, transition } from '../motion'
 import { cn } from '@/lib/cn'
 import { hapticFeedback } from '@/lib/native/haptics'
 
@@ -42,7 +42,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
               className={cn('pointer-events-auto flex w-full max-w-[420px] items-center gap-3 rounded-lg border px-4 py-3 shadow-md',
                 toast.tone === 'error' ? 'border-danger/30 bg-danger-soft text-danger' : 'border-line bg-ink text-bg')}
             >
-              {toast.tone === 'error' ? <AlertTriangle size={18} aria-hidden /> : toast.tone === 'info' ? <Info size={18} aria-hidden /> : <Check size={18} aria-hidden />}
+              {toast.tone === 'error' ? <AlertTriangle size={18} aria-hidden /> : toast.tone === 'info' ? <Info size={18} aria-hidden /> : <SuccessCheck />}
               <p className="flex-1 text-[14px] font-medium">{toast.title}</p>
               {toast.action && (
                 <button type="button" className="rounded-sm px-2 py-1 text-[13px] font-semibold underline-offset-2 hover:underline" onClick={() => { toast.action?.onClick(); dismiss(toast.id) }}>

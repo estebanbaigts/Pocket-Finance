@@ -80,6 +80,7 @@ Redéployer : `npx vercel@latest deploy --prod`. Voir [docs/deploiement.md](docs
 - [Déploiement](docs/deploiement.md)
 - [Tests](docs/tests.md)
 - [Guide utilisateur](docs/guide-utilisateur.md)
+- [Application iPhone](docs/ios.md) — Face ID, rappels, compilation Xcode
 - [Limites connues et feuille de route](docs/limites-et-roadmap.md)
 
 ## Pile technique

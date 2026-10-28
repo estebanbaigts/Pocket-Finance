@@ -37,7 +37,7 @@ export default function TransactionsPage() {
       <Panel padded={false}>
         {count === 0 ? (
           <EmptyState icon={<ReceiptText size={20} />} title="Aucune opération" action={<Button variant="primary" onClick={() => setAdding(true)}>Ajouter une opération</Button>}>
-            {filters.query || filters.type !== 'all' || filters.status !== 'all' ? 'Aucun résultat avec ces filtres.' : 'Rien d’enregistré pour ce mois.'}
+            {filters.query || filters.type !== 'all' || filters.status !== 'all' ? 'Rien ne correspond à ces filtres. Essaie d’en retirer un.' : 'Rien d’enregistré ce mois-ci. Ta première dépense prend trois secondes.'}
           </EmptyState>
         ) : (
           <ul className="px-5">

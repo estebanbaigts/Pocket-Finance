@@ -10,7 +10,7 @@ export function thresholdInsight(forecast: Forecast, thresholdCents: number): In
   if (!breach) return null
   return {
     id: 'threshold', tone: 'action',
-    title: `Avec les échéances connues, ton solde projeté passe sous ton seuil de ${formatCents(thresholdCents)} vers le ${formatDateFr(breach.date, 'day')}.`,
+    title: `Avec les échéances connues, ton solde projeté passe sous ton seuil de ${formatCents(thresholdCents)} vers le ${formatDateFr(breach.date, 'day').replace(/\.$/, '')}.`,
     evidence: [
       `Scénario prudent : solde de départ ${formatCents(prudent.startCents)}, sorties prévues ${formatCents(prudent.expensesCents)}, revenus inclus ${formatCents(prudent.incomeCents)}.`,
       `Dépenses variables restantes estimées : ${formatCents(prudent.variableCents)} (${forecast.variable.explanation.toLowerCase()}).`,

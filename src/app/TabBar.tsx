@@ -1,4 +1,6 @@
 import { MoreHorizontal, Plus } from 'lucide-react'
+import { motion } from 'motion/react'
+import { transition } from '@/components/motion'
 import { cn } from '@/lib/cn'
 import { routeById, type RouteId } from './routes'
 
@@ -12,8 +14,11 @@ export function TabBar({ current, onNavigate, onAdd, onMore }: { current: RouteI
     const active = id === current
     return (
       <button key={id} type="button" onClick={() => onNavigate(id)} aria-current={active ? 'page' : undefined}
-        className={cn('flex min-h-[48px] flex-1 flex-col items-center justify-center gap-0.5 text-[11px]', active ? 'text-ink' : 'text-ink-3')}>
-        <route.icon size={21} aria-hidden strokeWidth={active ? 2.2 : 1.8} />
+        className={cn('relative flex min-h-[48px] flex-1 flex-col items-center justify-center gap-0.5 text-[11px] transition-colors', active ? 'text-ink' : 'text-ink-3')}>
+        {active && <motion.span layoutId="tab-active" transition={transition.spring} className="absolute top-0.5 h-1 w-6 rounded-full bg-ink" />}
+        <motion.span animate={{ scale: active ? 1.08 : 1, y: active ? -1 : 0 }} transition={transition.spring}>
+          <route.icon size={21} aria-hidden strokeWidth={active ? 2.2 : 1.8} />
+        </motion.span>
         {route.short}
       </button>
     )
@@ -24,9 +29,9 @@ export function TabBar({ current, onNavigate, onAdd, onMore }: { current: RouteI
         {item('overview')}
         {item('transactions')}
         <div className="flex flex-1 justify-center">
-          <button type="button" onClick={onAdd} aria-label="Ajouter une opération" className="flex h-12 w-12 items-center justify-center rounded-full bg-ink text-bg shadow-md active:scale-95 transition-transform">
+          <motion.button type="button" onClick={onAdd} aria-label="Ajouter une opération" whileTap={{ scale: 0.88, rotate: 90 }} transition={transition.spring} className="flex h-12 w-12 items-center justify-center rounded-full bg-ink text-bg shadow-md">
             <Plus size={24} aria-hidden />
-          </button>
+          </motion.button>
         </div>
         {item('forecast')}
         <button type="button" onClick={onMore} aria-current={!inTabs ? 'page' : undefined} className={cn('flex min-h-[48px] flex-1 flex-col items-center justify-center gap-0.5 text-[11px]', !inTabs ? 'text-ink' : 'text-ink-3')}>

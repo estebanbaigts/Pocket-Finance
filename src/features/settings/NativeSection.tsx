@@ -17,6 +17,7 @@ export function NativeSection() {
 
   const toggleLock = async (on: boolean) => {
     // Activer ou désactiver le verrou exige de prouver qu'on est bien le propriétaire.
+    if (on && !(await biometricAvailable())) return toast({ title: 'Configure d’abord Face ID ou un code dans les Réglages de l’iPhone.', tone: 'error' })
     if (!(await verifyOwner())) return toast({ title: 'Identité non confirmée : réglage inchangé.', tone: 'error' })
     setNativePref('lock', on)
   }
@@ -29,7 +30,7 @@ export function NativeSection() {
   return (
     <Panel title="Sur cet iPhone">
       <div className="flex flex-col gap-3">
-        <Toggle checked={lock} onChange={(v) => void toggleLock(v)} label="Verrouiller avec Face ID" description={faceId ? 'À l’ouverture et après 30 s en arrière-plan.' : 'Face ID ou code de l’appareil non configuré.'} />
+        <Toggle checked={lock && faceId} onChange={(v) => void toggleLock(v)} label="Verrouiller avec Face ID" description={faceId ? 'À l’ouverture et après 30 s en arrière-plan.' : 'Face ID ou code de l’appareil non configuré.'} />
         <Toggle checked={reminders} onChange={(v) => void toggleReminders(v)} label="Rappels d’échéances" description="La veille à 9 h, pour les factures et mensualités des 30 prochains jours." />
         {reminders && <Toggle checked={amounts} onChange={(v) => setNativePref('reminderAmounts', v)} label="Afficher les montants" description="Désactivé par défaut : les notifications sont visibles sur l’écran verrouillé." />}
       </div>

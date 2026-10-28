@@ -38,6 +38,7 @@ export function Shell() {
           </Suspense>
         </div>
       </main>
+      {compact && <div aria-hidden className="fixed inset-x-0 top-0 h-[env(safe-area-inset-top)] bg-[color-mix(in_srgb,var(--bg)_88%,transparent)] backdrop-blur-xl" style={{ zIndex: 'var(--layer-nav)' }} />}
       {compact && <TabBar current={route} onNavigate={navigate} onAdd={openAdd} onMore={() => setMore(true)} />}
       {compact && <MoreSheet open={more} onClose={() => setMore(false)} onNavigate={navigate} />}
       <QuickAddSheet open={adding} onClose={() => setAdding(false)} />

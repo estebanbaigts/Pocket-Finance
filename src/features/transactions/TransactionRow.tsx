@@ -1,4 +1,6 @@
 import { ArrowLeftRight, Check } from 'lucide-react'
+import { motion } from 'motion/react'
+import { transition } from '@/components/motion'
 import type { Transaction } from '@/domain/model'
 import { isPending } from '@/domain/model'
 import { formatDateFr } from '@/domain/dates'
@@ -31,7 +33,7 @@ export function TransactionRow({ txn, today, onOpen, onSettle }: RowProps) {
 
   return (
     <div className="flex items-center gap-3 py-3">
-      <button type="button" onClick={() => onOpen(txn)} className="flex min-w-0 flex-1 items-center gap-3 text-left">
+      <motion.button type="button" whileTap={{ scale: 0.98 }} transition={transition.fast} onClick={() => onOpen(txn)} className="flex min-w-0 flex-1 items-center gap-3 rounded-md text-left">
         <span aria-hidden="true" className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-surface-2">
           {txn.type === 'transfer' ? <ArrowLeftRight size={15} className="text-ink-2" /> : <span className="h-2.5 w-2.5 rounded-full" style={{ background: toneVar(category?.tone) }} />}
         </span>
@@ -45,16 +47,16 @@ export function TransactionRow({ txn, today, onOpen, onSettle }: RowProps) {
             {txn.origin === 'user_declared' && <Badge>Déclaré</Badge>}
           </span>
         </span>
-      </button>
+      </motion.button>
       <div className="flex shrink-0 flex-col items-end gap-1">
         <Amount cents={sign * txn.amountCents} signed={sign !== 0} tone={sign > 0 ? 'positive' : txn.status === 'cancelled' ? 'muted' : 'neutral'} className="text-[15px] font-medium" />
         {txn.amountMinCents !== null && <span className="num text-[11px] text-ink-3">min {Math.round(txn.amountMinCents / 100)} €</span>}
       </div>
       {onSettle && isPending(txn.status) && (
-        <button type="button" onClick={() => onSettle(txn)} aria-label={`${settleVerb(txn.type)} : ${title(txn, category?.name)}`} title={settleVerb(txn.type)}
+        <motion.button type="button" whileTap={{ scale: 0.85 }} whileHover={{ scale: 1.06 }} transition={transition.fast} onClick={() => onSettle(txn)} aria-label={`${settleVerb(txn.type)} : ${title(txn, category?.name)}`} title={settleVerb(txn.type)}
           className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-line-strong text-ink-2 hover:border-positive hover:text-positive">
           <Check size={16} aria-hidden />
-        </button>
+        </motion.button>
       )}
     </div>
   )
