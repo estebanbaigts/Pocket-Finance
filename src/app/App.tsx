@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { PageSkeleton, ToastProvider } from '@/components/ui'
 import { MotionProvider } from '@/components/motion'
 import { LedgerProvider, useLedger } from '@/features/data/LedgerProvider'
+import { AppLock } from '@/features/native/AppLock'
 import { OnboardingFlow } from '@/features/onboarding/OnboardingFlow'
 import { SyncProvider } from '@/features/sync/SyncProvider'
 import { bootstrap, watchForeground } from './bootstrap'
@@ -11,7 +12,7 @@ import { StartupError } from './StartupError'
 function Gate() {
   const { settings } = useLedger()
   if (!settings) return <PageSkeleton />
-  return settings.onboardingDone ? <Shell /> : <OnboardingFlow />
+  return settings.onboardingDone ? <AppLock><Shell /></AppLock> : <OnboardingFlow />
 }
 
 export function App() {

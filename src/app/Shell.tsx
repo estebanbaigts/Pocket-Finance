@@ -3,6 +3,7 @@ import { Suspense, useCallback, useState } from 'react'
 import { PageSkeleton } from '@/components/ui'
 import { page } from '@/components/motion'
 import { useIsCompact } from '@/lib/useMediaQuery'
+import { useReminderSync } from '@/features/native/useReminderSync'
 import { QuickAddSheet } from '@/features/quickAdd/QuickAddSheet'
 import { MoreSheet } from './MoreSheet'
 import { routeById } from './routes'
@@ -19,6 +20,7 @@ export function Shell() {
   const [more, setMore] = useState(false)
   const openAdd = useCallback(() => setAdding(true), [])
   useShortcuts(openAdd, navigate)
+  useReminderSync()
   const Page = routeById(route).page
 
   return (
