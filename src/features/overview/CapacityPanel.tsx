@@ -6,6 +6,13 @@ import type { Financials } from '../data/useFinancials'
 /** « Combien puis-je dépenser aujourd'hui, cette semaine ? » et « Combien puis-je mettre de côté ? ». */
 export function CapacityPanel({ f }: { f: Financials }) {
   const { capacity } = f
+  if (f.balance.knownAccounts.length === 0) {
+    return (
+      <Panel eyebrow="Marge de manœuvre" title="Ce que tu peux dépenser sans risque">
+        <p className="text-[13px] text-ink-2">Pour le calculer, il faut au moins un solde de compte connu. Renseigne-le dans « Comptes » : aucun solde n’est supposé.</p>
+      </Panel>
+    )
+  }
   return (
     <Panel eyebrow="Marge de manœuvre" title="Ce que tu peux dépenser sans risque">
       <dl className="grid grid-cols-3 gap-3">

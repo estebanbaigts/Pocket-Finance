@@ -24,13 +24,19 @@ export function BalanceHero({ f }: { f: Financials }) {
         </div>
       )}
       <dl className="mt-6 grid grid-cols-3 gap-3 border-t border-line pt-5">
-        {(['prudent', 'realistic', 'favorable'] as const).map((name) => (
-          <div key={name}>
-            <dt className="text-[12px] text-ink-3">Fin de mois · {{ prudent: 'prudent', realistic: 'réaliste', favorable: 'favorable' }[name]}</dt>
-            <dd><Amount cents={forecast.scenarios[name].endCents} tone="auto" animated className={name === 'realistic' ? 'text-[20px] font-semibold' : 'text-[16px] font-medium text-ink-2'} /></dd>
-          </div>
-        ))}
+        {(['prudent', 'realistic', 'favorable'] as const).map((name) => {
+          const p = forecast.scenarios[name]
+          // Sans aucun solde connu, on n'affiche pas un « solde de fin de mois » partant de zéro : seulement la variation.
+          const cents = noAccount ? p.endCents - p.startCents : p.endCents
+          return (
+            <div key={name}>
+              <dt className="text-[12px] text-ink-3">{noAccount ? 'Variation prévue' : 'Fin de mois'} · {{ prudent: 'prudent', realistic: 'réaliste', favorable: 'favorable' }[name]}</dt>
+              <dd><Amount cents={cents} signed={noAccount} tone="auto" animated className={name === 'realistic' ? 'text-[20px] font-semibold' : 'text-[16px] font-medium text-ink-2'} /></dd>
+            </div>
+          )
+        })}
       </dl>
+      {!noAccount && balance.unknownAccounts.length > 0 && <p className="mt-2 text-[12px] text-ink-3">Projection hors comptes au solde inconnu.</p>}
     </motion.section>
   )
 }

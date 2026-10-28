@@ -30,6 +30,7 @@ export default function ForecastPage() {
   return (
     <>
       <PageHeader title="Prévisions" subtitle={`Projection jusqu’au ${formatDateFr(f.forecast.endDate, 'long')}. Trois scénarios déterministes : aucune probabilité arbitraire n’est appliquée.`} />
+      {f.balance.knownAccounts.length === 0 && <p role="note" className="mb-4 rounded-md bg-warning-soft px-4 py-3 text-[13px] text-warning">Aucun solde de compte connu : les montants ci-dessous partent de 0 € et ne représentent que la variation prévue. Renseigne un solde dans « Comptes ».</p>}
       <div className="mb-4 grid gap-4 min-[900px]:grid-cols-3">
         {(['prudent', 'realistic', 'favorable'] as const).map((s) => <ScenarioCard key={s} p={f.forecast.scenarios[s]} highlighted={s === 'realistic'} />)}
       </div>

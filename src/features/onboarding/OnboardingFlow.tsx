@@ -4,6 +4,7 @@ import { Button, useToast } from '@/components/ui'
 import { transition } from '@/components/motion'
 import { APP_NAME } from '@/app/config'
 import { db, updateEntity } from '@/services/storage'
+import { useLedger } from '../data/LedgerProvider'
 import { useToday } from '../data/useToday'
 import { commitOnboarding } from './commit'
 import { initialState } from './prefill'
@@ -32,7 +33,10 @@ async function finish() {
 export function OnboardingFlow() {
   const today = useToday()
   const toast = useToast()
-  const [step, setStep] = useState(0)
+  const { accounts, rules } = useLedger()
+  // Données déjà enregistrées (assistant interrompu après l'étape 5) : on reprend à la projection
+  // au lieu de tout ressaisir, ce qui créerait des doublons.
+  const [step, setStep] = useState(() => (accounts.length > 0 || rules.length > 0 ? 5 : 0))
   const [saving, setSaving] = useState(false)
   const [state, setState] = useState<OnboardingState>(() => initialState(today))
   const update = (patch: Partial<OnboardingState>) => setState((s) => ({ ...s, ...patch }))
