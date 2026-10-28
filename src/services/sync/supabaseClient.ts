@@ -1,4 +1,4 @@
-import { createClient, type SupabaseClient } from '@supabase/supabase-js'
+import type { SupabaseClient } from '@supabase/supabase-js'
 
 /**
  * Seules l'URL du projet et la clé publique (« anon » / « publishable ») sont lues.
@@ -16,13 +16,16 @@ export function isCloudConfigured(): boolean {
   return supabaseConfig() !== null
 }
 
-let client: SupabaseClient | null = null
+let client: Promise<SupabaseClient> | null = null
 
-export function getSupabase(): SupabaseClient | null {
+/** Le SDK n'est téléchargé que si la synchronisation est configurée : le mode local reste léger. */
+export function getSupabase(): Promise<SupabaseClient> | null {
   const config = supabaseConfig()
   if (!config) return null
-  client ??= createClient(config.url, config.anonKey, {
-    auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true, flowType: 'pkce' },
-  })
+  client ??= import('@supabase/supabase-js').then(({ createClient }) =>
+    createClient(config.url, config.anonKey, {
+      auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true, flowType: 'pkce' },
+    }),
+  )
   return client
 }

@@ -27,4 +27,16 @@ function serviceWorker(): Plugin {
 export default defineConfig({
   plugins: [react(), tailwindcss(), serviceWorker()],
   resolve: { alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) } },
+  build: {
+    rollupOptions: {
+      output: {
+        // Bibliothèques séparées du code applicatif : mises en cache plus longtemps entre deux versions.
+        manualChunks: {
+          react: ['react', 'react-dom'],
+          motion: ['motion/react'],
+          data: ['dexie', 'dexie-react-hooks', 'zod', 'react-hook-form', '@hookform/resolvers/zod'],
+        },
+      },
+    },
+  },
 })

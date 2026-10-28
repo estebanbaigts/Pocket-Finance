@@ -39,7 +39,7 @@ export function SyncProvider({ children }: { children: ReactNode }) {
   }, [configured])
 
   const syncNow = useCallback(async () => {
-    const client = getSupabase()
+    const client = await getSupabase()
     if (!enabled || !client || !online || running) return
     setRunning(true)
     const outcome = await syncOnce(new SupabaseRemote(client))
