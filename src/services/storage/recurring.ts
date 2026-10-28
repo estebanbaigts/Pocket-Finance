@@ -1,5 +1,5 @@
 import type { IsoDate, RecurringRule } from '@/domain/model'
-import { addMonthKey, monthEnd, monthKey } from '@/domain/dates'
+import { addMonthKey, monthEnd, monthKey, monthStart } from '@/domain/dates'
 import { isSchedulable, planOccurrences } from '@/domain/recurrence'
 import { live } from '@/domain/ledger'
 import { db } from './db'
@@ -11,10 +11,15 @@ export function materializationHorizon(today: IsoDate): IsoDate {
   return monthEnd(addMonthKey(monthKey(today), 1))
 }
 
-/** Début de génération : départ de la règle, mais jamais avant la date de début du suivi. */
+/**
+ * Début de génération : départ de la règle, mais pas avant le 1er du mois de début du suivi.
+ * Une échéance de ce mois déjà passée est générée « prévue » et signalée « à actualiser » :
+ * on ne suppose jamais qu'elle a été payée avant le début du suivi.
+ */
 function generationStart(rule: RecurringRule, trackingStart: IsoDate | null): IsoDate {
   const start = rule.startDate ?? '9999-12-31'
-  return trackingStart !== null && trackingStart > start ? trackingStart : start
+  const floor = trackingStart === null ? null : monthStart(monthKey(trackingStart))
+  return floor !== null && floor > start ? floor : start
 }
 
 /**

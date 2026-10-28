@@ -79,3 +79,16 @@ describe('initialisation concurrente', () => {
     expect(await db.categories.count()).toBe(13)
   })
 })
+
+describe('échéances antérieures au début du suivi', () => {
+  it('génère l’échéance passée du mois de départ sans la supposer payée', async () => {
+    await resetDatabase()
+    const settings = await ensureDefaults('Pocket')
+    await updateEntity('settings', settings.id, { trackingStartDate: '2026-10-28' })
+    const { id: _ignored, ...rule } = makeRule({ startDate: '2026-09-05' })
+    await createEntity('recurringRules', rule)
+    await ensureOccurrences('2026-10-28')
+    const dates = (await db.transactions.toArray()).map((t) => [t.date, t.status]).sort()
+    expect(dates).toEqual([['2026-10-05', 'planned'], ['2026-11-05', 'planned']])
+  })
+})

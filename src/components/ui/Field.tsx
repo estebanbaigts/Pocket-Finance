@@ -63,7 +63,7 @@ export function Toggle({ checked, onChange, label, description }: { checked: boo
         id={id} type="button" role="switch" aria-checked={checked} onClick={() => onChange(!checked)}
         className={cn('relative h-7 w-12 shrink-0 rounded-full transition-colors duration-200', checked ? 'bg-positive' : 'bg-surface-3')}
       >
-        <span className={cn('absolute top-0.5 h-6 w-6 rounded-full bg-white shadow-sm transition-transform duration-200', checked ? 'translate-x-[22px]' : 'translate-x-0.5')} />
+        <span className={cn('absolute left-0 top-0.5 h-6 w-6 rounded-full bg-white shadow-sm transition-transform duration-200', checked ? 'translate-x-[22px]' : 'translate-x-0.5')} />
       </button>
     </div>
   )
