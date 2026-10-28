@@ -70,3 +70,12 @@ describe('stockage local', () => {
     expect(await db.categories.count()).toBe(13)
   })
 })
+
+describe('initialisation concurrente', () => {
+  it('deux initialisations simultanées ne créent qu’un seul jeu de paramètres', async () => {
+    await resetDatabase()
+    await Promise.all([ensureDefaults('Pocket'), ensureDefaults('Pocket')])
+    expect(await db.settings.count()).toBe(1)
+    expect(await db.categories.count()).toBe(13)
+  })
+})

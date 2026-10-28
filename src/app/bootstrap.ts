@@ -2,10 +2,12 @@ import { todayIso } from '@/domain/dates'
 import { ensureDefaults, ensureOccurrences } from '@/services/storage'
 import { APP_NAME } from './config'
 
-/** Au démarrage : paramètres et catégories par défaut, puis génération des échéances manquantes. */
-export async function bootstrap(): Promise<void> {
-  await ensureDefaults(APP_NAME)
-  await ensureOccurrences(todayIso())
+let started: Promise<void> | null = null
+
+/** Au démarrage (une seule fois) : paramètres et catégories par défaut, puis échéances manquantes. */
+export function bootstrap(): Promise<void> {
+  started ??= ensureDefaults(APP_NAME).then(() => ensureOccurrences(todayIso())).then(() => undefined)
+  return started
 }
 
 /** Regénère les échéances quand l'application revient au premier plan (ex. un nouveau mois a commencé). */

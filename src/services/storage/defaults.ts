@@ -1,5 +1,6 @@
 import type { Category, Settings } from '@/domain/model'
 import { db } from './db'
+import { deterministicId } from './ids'
 import { createEntity, type Draft } from './repository'
 
 type CategoryDraft = Omit<Category, 'id' | 'createdAt' | 'updatedAt' | 'deletedAt' | 'version'>
@@ -37,15 +38,21 @@ export function defaultSettings(appName: string): Draft<'settings'> {
   }
 }
 
-/** Garantit la présence des paramètres et des catégories par défaut au premier lancement. */
+/**
+ * Garantit la présence des paramètres et des catégories par défaut au premier lancement.
+ * Une seule transaction : deux initialisations concurrentes (deux onglets) ne créent pas de doublon.
+ * Les catégories par défaut ont un identifiant déterministe, identique sur tous les appareils.
+ */
 export async function ensureDefaults(appName: string): Promise<Settings> {
-  const existing = await db.settings.toCollection().first()
-  if (existing) return existing
-  const settings = await createEntity('settings', defaultSettings(appName))
-  if ((await db.categories.count()) === 0) {
-    for (const category of defaultCategories()) await createEntity('categories', category)
-  }
-  return settings
+  return db.transaction('rw', db.settings, db.categories, db.outbox, async () => {
+    const existing = await db.settings.toCollection().first()
+    if (existing) return existing
+    const settings = await createEntity('settings', defaultSettings(appName))
+    if ((await db.categories.count()) === 0) {
+      for (const category of defaultCategories()) await createEntity('categories', { ...category, id: deterministicId(`default-category:${category.name}`) })
+    }
+    return settings
+  })
 }
 
 export async function categoryIdByName(name: string): Promise<string | null> {
